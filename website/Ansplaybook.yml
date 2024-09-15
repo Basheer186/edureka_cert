@@ -1,73 +1,47 @@
 ---
-
 - hosts: webservers
-
   become: true
-
   tasks:
-
-
-
-    - name: Ensure Apache is installed
-
+  
+    - name: Install Docker (if not already installed)
       apt:
-
-        name: apache2
-
+        name: docker.io
         state: present
-
         update_cache: yes
 
-
-
-    - name: Ensure PHP is installed
-
-      apt:
-
-        name: php
-
-        state: present
-
-        update_cache: yes
-
-
-
-    - name: Copy PHP project files to the web server
-
-      copy:
-
-        src: target/*jar/index.php
-
-        dest: /var/www/html/index.php
-
-        owner: www-data
-
-        group: www-data
-
-        mode: '0644'
-
-
-
-    - name: Set permissions for /var/www/html
-
-      file:
-
-        path: /var/www/html
-
-        owner: www-data
-
-        group: www-data
-
-        recurse: yes
-
-
-
-    - name: Restart Apache service
-
+    - name: Start Docker service
       service:
+        name: docker
+        state: started
+        enabled: yes
 
-        name: apache2
+    - name: Pull the PHP project Docker image
+      docker_image:
+        name: localhost:5000/my-php-app:latest
 
-        state: restarted
+        tag: latest
+        source: pull
 
+    - name: Stop existing PHP container (if any)
+      docker_container:
+        name: php-app-container
+        state: stopped
+        force_kill: yes
+        remove: yes
 
+    - name: Run the PHP project container
+      docker_container:
+        name: php-app-container
+        image: my-docker-repo/my-php-app:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"  # Map port 80 on the host to port 80 in the container
+        volumes:
+          - /path/on/host:/path/in/container  # Optional: mount volumes if needed
+
+    - name: Ensure the PHP container is running
+      docker_container:
+        name: php-app-container
+        state: started
+        restart_policy: always
