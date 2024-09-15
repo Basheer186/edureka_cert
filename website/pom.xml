@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+
+    <groupId>com.example</groupId>
+
+    <artifactId>php-project</artifactId>
+
+    <version>1.0.0</version>
+
+    <packaging>jar</packaging>
+
+
+
+    <build>
+
+        <plugins>
+
+            <!-- Use the exec plugin to run PHP commands -->
+
+            <plugin>
+
+                <groupId>org.codehaus.mojo</groupId>
+
+                <artifactId>exec-maven-plugin</artifactId>
+
+                <version>3.0.0</version>
+
+                <executions>
+
+                    <execution>
+
+                        <goals>
+
+                            <goal>exec</goal>
+
+                        </goals>
+
+                    </execution>
+
+                </executions>
+
+                <configuration>
+
+                    <executable>php</executable>
+
+                    <arguments>
+
+                        <argument>-r</argument>
+
+                        <argument>echo 'Packaging PHP project...';</argument>
+
+                    </arguments>
+
+                </configuration>
+
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>
+
+
