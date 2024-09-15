@@ -1,0 +1,73 @@
+---
+
+- hosts: webservers
+
+  become: true
+
+  tasks:
+
+
+
+    - name: Ensure Apache is installed
+
+      apt:
+
+        name: apache2
+
+        state: present
+
+        update_cache: yes
+
+
+
+    - name: Ensure PHP is installed
+
+      apt:
+
+        name: php
+
+        state: present
+
+        update_cache: yes
+
+
+
+    - name: Copy PHP project files to the web server
+
+      copy:
+
+        src: target/*jar/index.php
+
+        dest: /var/www/html/index.php
+
+        owner: www-data
+
+        group: www-data
+
+        mode: '0644'
+
+
+
+    - name: Set permissions for /var/www/html
+
+      file:
+
+        path: /var/www/html
+
+        owner: www-data
+
+        group: www-data
+
+        recurse: yes
+
+
+
+    - name: Restart Apache service
+
+      service:
+
+        name: apache2
+
+        state: restarted
+
+
